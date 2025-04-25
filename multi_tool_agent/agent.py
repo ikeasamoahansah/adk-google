@@ -7,9 +7,12 @@ from google.adk.runners import Runner
 from google.adk.agents import Agent
 from google.genai import types
 
-openai_key = os.environ['OPENAI_API_KEY']
+# for multi-model support
+from google.adk.models.lite_llm import LiteLlm
+
+# openai_key = os.environ['OPENAI_API_KEY']
 google_key = os.environ['GOOGLE_API_KEY']
-model_list = ['gemini-2.0-flash-exp', 'openai/gpt-4o']
+model_agent = 'gemini-2.0-flash-exp'
 
 
 def get_and_parse_document(input: int, text: str) -> str:
@@ -28,7 +31,7 @@ def get_and_parse_document(input: int, text: str) -> str:
 
 financial_agent = Agent(
     name="finai_agent_v1",
-    model=model_list[0],
+    model=model_agent,
     description="Provides financial reports",
     instruction="You are a helpful financial assistant. Your primary goal is to provide financial reports. "
                 "When the user sends a document or a text, "
@@ -80,6 +83,8 @@ async def call_agent_async(query: str):
     print(f"<<< Agent Response: {final_response_text}")
 
 
-async def run_conversation() -> asyncio.coroutines:
+async def run_conversation():
     await call_agent_async("Make a price list for apples, bananas and oranges")
     await call_agent_async("Make a price list for some household utensils")
+
+root_agent = financial_agent
