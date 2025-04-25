@@ -3,6 +3,7 @@ import asyncio
 import datetime
 
 from google.adk.sessions import InMemorySessionService
+from google.adk.artifacts import InMemoryArtifactService
 from google.adk.runners import Runner
 from google.adk.agents import Agent
 from google.genai import types
@@ -10,23 +11,15 @@ from google.genai import types
 # for multi-model support
 from google.adk.models.lite_llm import LiteLlm
 
+# my imports
+from .helpers import get_and_parse_document
+
 # openai_key = os.environ['OPENAI_API_KEY']
 google_key = os.environ['GOOGLE_API_KEY']
 model_agent = 'gemini-2.0-flash-exp'
+artifact_service = InMemoryArtifactService()
 
 
-def get_and_parse_document(input: int, text: str) -> str:
-    """Parses a financial document sent by the user.
-
-    Args:
-        input (file): The financial document sent by the user
-        text (str): Additional instructions given by the user
-    
-    Returns:
-        str: A structured data in the csv file format with comma separated values
-            Includes the total column with for the amount of values in the '$' currency
-    """
-    print("Document!")
 
 
 financial_agent = Agent(
@@ -57,7 +50,8 @@ session = session_service.create_session(
 runner = Runner(
     agent=financial_agent,
     app_name=APP_NAME,
-    session_service=session_service
+    session_service=session_service, 
+    artifact_service=artifact_service
 )
 
 # Agent Interaction with async calls and executions
@@ -82,9 +76,5 @@ async def call_agent_async(query: str):
 
     print(f"<<< Agent Response: {final_response_text}")
 
-
-async def run_conversation():
-    await call_agent_async("Make a price list for apples, bananas and oranges")
-    await call_agent_async("Make a price list for some household utensils")
 
 root_agent = financial_agent
