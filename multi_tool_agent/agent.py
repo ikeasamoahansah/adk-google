@@ -12,7 +12,7 @@ from google.genai import types
 from google.adk.models.lite_llm import LiteLlm
 
 # my imports
-from .helpers import get_and_parse_document
+from .helpers import save_document, process_latest_report
 
 # openai_key = os.environ['OPENAI_API_KEY']
 google_key = os.environ['GOOGLE_API_KEY']
@@ -28,9 +28,9 @@ financial_agent = Agent(
     description="Provides financial reports",
     instruction="You are a helpful financial assistant. Your primary goal is to provide financial reports. "
                 "When the user sends a document or a text, "
-                "you MUST use the `get_and_parse_document` tool to generate the file in a csv format. "
+                "you MUST use the `process_latest_report` tool to generate the file in a csv format. "
                 "Only use the tool when the user's prompt is related to finance. ",
-    tools=[get_and_parse_document],
+    tools=[process_latest_report],
 )
 
 session_service = InMemorySessionService()
