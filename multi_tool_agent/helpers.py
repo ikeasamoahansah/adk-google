@@ -1,6 +1,7 @@
 from google.genai import types
 from google.adk.agents.callback_context import CallbackContext
 
+# def get_and_load_dcument()
 
 async def save_document(context: CallbackContext, report_bytes: bytes):
     """Saves generated PDF report bytes as an artifact."""
